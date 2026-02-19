@@ -1,0 +1,2 @@
+rootProject.name = "Segment Intending"
+include ':app'

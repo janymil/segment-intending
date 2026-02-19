@@ -1,0 +1,24 @@
+// Top-level build file for Android Studio wrapper project
+// This allows packaging the PWA as an Android APK using Trusted Web Activity (TWA)
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.2.0'
+        classpath 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

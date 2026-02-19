@@ -1,0 +1,62 @@
+# Android Build Files
+android/app/build/
+android/.gradle/
+android/local.properties
+android/.idea/
+android/*.iml
+android/.DS_Store
+android/build/
+android/captures/
+android/.externalNativeBuild/
+android/.cxx/
+
+# Gradle
+.gradle
+gradle-wrapper.jar
+
+# Node (if using for local dev server)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# OS Files
+.DS_Store
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+.classpath
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Generated icons (keep the script, not the generated files)
+# Uncomment if you want to regenerate icons each time
+# icons/*.png
+
+# Backup files
+*.bak
+*.backup
+
+# API Keys (if stored in separate file - not recommended)
+.env
+.env.local
+secrets.json
+
+# Build outputs
+dist/
+out/
