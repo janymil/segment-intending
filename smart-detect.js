@@ -294,7 +294,9 @@ const SmartDetect = (function () {
             { enableHighAccuracy: true }
         );
 
-        // Watch for changes
+        // Watch for changes - usage of high accuracy depends on battery mode
+        const useHighAccuracy = CONFIG.locationUpdateInterval <= 30000;
+
         state.locationWatchId = navigator.geolocation.watchPosition(
             (pos) => {
                 const newPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
@@ -316,7 +318,11 @@ const SmartDetect = (function () {
                 checkPlace(newPos);
             },
             () => { },
-            { enableHighAccuracy: true, maximumAge: 30000 }
+            {
+                enableHighAccuracy: useHighAccuracy,
+                maximumAge: CONFIG.locationUpdateInterval,
+                timeout: 20000
+            }
         );
 
         emit('location_started', {});
@@ -736,11 +742,31 @@ const SmartDetect = (function () {
         };
     }
 
+    function setBatterySaving(enabled) {
+        if (enabled) {
+            CONFIG.motionSampleInterval = 1000;      // 1s (was 200ms)
+            CONFIG.locationUpdateInterval = 120000;  // 2m (was 30s)
+            CONFIG.noiseSampleInterval = 2000;       // 2s (was 500ms)
+        } else {
+            CONFIG.motionSampleInterval = 200;
+            CONFIG.locationUpdateInterval = 30000;
+            CONFIG.noiseSampleInterval = 500;
+        }
+
+        // Restart active modules to apply changes
+        if (state.enabled.motion) { stopMotion(); startMotion(); }
+        if (state.enabled.location) { stopLocation(); startLocation(); }
+        if (state.enabled.noise) { stopNoise(); startNoise(); }
+
+        emit('battery_saving', { enabled });
+    }
+
     // ===== PUBLIC INTERFACE =====
     return {
         init,
         setEnabled,
         isEnabled,
+        setBatterySaving,
         notifySegmentSet,
         getMotionState,
         getNoiseLevel,

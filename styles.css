@@ -2442,3 +2442,324 @@ body {
     right: calc(50% - 195px);
   }
 }
+
+/* ===== LIGHT THEME ===== */
+[data-theme="light"] {
+  --bg-deep: #f5f5fa;
+  --bg-surface: #ffffff;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-card-solid: #ffffff;
+  --bg-input: rgba(0, 0, 0, 0.04);
+  --text-primary: #1a1a2e;
+  --text-secondary: rgba(26, 26, 46, 0.6);
+  --text-tertiary: rgba(26, 26, 46, 0.35);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --shadow-glow: 0 0 30px rgba(124, 92, 252, 0.1);
+}
+
+[data-theme="light"] .bottom-nav {
+  background: rgba(255, 255, 255, 0.92);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .nav-item.active {
+  color: var(--accent-1);
+}
+
+[data-theme="light"] .settings-section,
+[data-theme="light"] .analytics-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .modal-select,
+[data-theme="light"] .modal-input,
+[data-theme="light"] .ai-key-input,
+[data-theme="light"] .ai-select {
+  background: var(--bg-input);
+  color: var(--text-primary);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .toggle-slider {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .btn-settings-action {
+  background: rgba(124, 92, 252, 0.08);
+  color: var(--text-primary);
+  border-color: rgba(124, 92, 252, 0.2);
+}
+
+[data-theme="light"] .history-calendar .cal-day.has-data {
+  background: rgba(124, 92, 252, 0.1);
+}
+
+[data-theme="light"] .smart-banner {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .reminder-modal {
+  background: var(--bg-surface);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .detection-status {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/* ===== THEME TOGGLE ===== */
+.theme-selector {
+  display: flex;
+  gap: 8px;
+}
+
+.theme-btn {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1.5px solid rgba(124, 92, 252, 0.15);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.theme-btn:hover {
+  border-color: rgba(124, 92, 252, 0.4);
+  color: var(--text-primary);
+}
+
+.theme-btn.active {
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 12px rgba(124, 92, 252, 0.3);
+}
+
+/* ===== ANALYTICS SCREEN ===== */
+.analytics-period-selector {
+  display: flex;
+  gap: 6px;
+}
+
+.period-btn {
+  padding: 6px 14px;
+  border: 1.5px solid rgba(124, 92, 252, 0.2);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.period-btn:hover {
+  border-color: rgba(124, 92, 252, 0.5);
+}
+
+.period-btn.active {
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+  color: #fff;
+  border-color: transparent;
+}
+
+.analytics-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(124, 92, 252, 0.08);
+  backdrop-filter: blur(12px);
+  animation: fadeSlideUp 0.4s ease both;
+}
+
+.analytics-card-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+}
+
+.chart-container {
+  width: 100%;
+  position: relative;
+}
+
+.chart-container canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+
+/* Activity Breakdown */
+.activity-breakdown {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.donut-chart-wrap {
+  flex-shrink: 0;
+}
+
+.activity-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.legend-value {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.78rem;
+}
+
+/* Top Activities */
+.top-activities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.top-activity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+}
+
+.top-activity-rank {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-1);
+  min-width: 26px;
+  text-align: center;
+}
+
+.top-activity-name {
+  flex: 1;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+}
+
+.top-activity-count {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: rgba(124, 92, 252, 0.12);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+/* Analytics Stats Grid */
+.analytics-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 14px;
+}
+
+.analytics-stat {
+  text-align: center;
+  padding: 10px 6px;
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+}
+
+.analytics-stat-number {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.analytics-stat-label {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.analytics-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-tertiary);
+  font-size: 0.9rem;
+}
+
+/* ===== BATTERY STATUS ===== */
+.battery-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+  margin-top: 10px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.battery-icon {
+  font-size: 1.1rem;
+}
+
+.battery-status.low {
+  background: rgba(242, 92, 92, 0.1);
+  color: var(--danger);
+}
+
+.battery-status.charging {
+  background: rgba(54, 209, 160, 0.1);
+  color: var(--success);
+}
+
+/* Fade-slide animation */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

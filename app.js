@@ -31,7 +31,9 @@
       inactivity: true,
       patterns: true,
       aiProvider: 'gemini',
-      aiApiKey: ''
+      aiApiKey: '',
+      theme: 'dark',
+      batterySaver: true
     }
   };
 
@@ -43,6 +45,7 @@
     active: document.getElementById('screen-active'),
     dashboard: document.getElementById('screen-dashboard'),
     history: document.getElementById('screen-history'),
+    analytics: document.getElementById('screen-analytics'),
     settings: document.getElementById('screen-settings')
   };
 
@@ -50,6 +53,8 @@
   function init() {
     loadState();
     setupEventListeners();
+    setupTheme();
+    setupBatteryMonitor();
 
     if (state.hasOnboarded) {
       showScreen('dashboard');
@@ -1106,19 +1111,38 @@ Keep it to 1-2 sentences maximum. Be warm, empowering, and genuine. Do not use q
   }
 
   function fireReminder(reminder) {
-    // 1. Browser Notification
+    // 1. Browser Notification with actions
     if (reminder.alerts.notification && 'Notification' in window && Notification.permission === 'granted') {
-      const notif = new Notification('⏰ Time to set an intention!', {
-        body: `It's time for: ${reminder.activity}. Pause and set your intention.`,
-        icon: 'icons/icon-192.png',
-        tag: `reminder-${reminder.id}`,
-        requireInteraction: true
-      });
-      notif.onclick = () => {
-        window.focus();
-        startNewSegment(true);
-        notif.close();
-      };
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        // Use SW for interactive notification actions
+        navigator.serviceWorker.ready.then(reg => {
+          reg.showNotification('⏰ Time to set an intention!', {
+            body: `It's time for: ${reminder.activity}. Pause and set your intention.`,
+            icon: 'icons/icon-192.png',
+            badge: 'icons/icon-72.png',
+            tag: `reminder-${reminder.id}`,
+            requireInteraction: true,
+            actions: [
+              { action: 'start-segment', title: '✨ Set Intention' },
+              { action: 'snooze', title: '💤 Snooze 10min' },
+              { action: 'dismiss', title: '✕ Dismiss' }
+            ]
+          });
+        });
+      } else {
+        // Fallback for no SW
+        const notif = new Notification('⏰ Time to set an intention!', {
+          body: `It's time for: ${reminder.activity}. Pause and set your intention.`,
+          icon: 'icons/icon-192.png',
+          tag: `reminder-${reminder.id}`,
+          requireInteraction: true
+        });
+        notif.onclick = () => {
+          window.focus();
+          startNewSegment(true);
+          notif.close();
+        };
+      }
     }
 
     // 2. Sound
@@ -1130,6 +1154,15 @@ Keep it to 1-2 sentences maximum. Be warm, empowering, and genuine. Do not use q
     if (reminder.alerts.vibration && 'vibrate' in navigator) {
       navigator.vibrate([200, 100, 200, 100, 200]);
     }
+  }
+
+  // Listen for messages from Service Worker (interactive notifications)
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'START_SEGMENT') {
+        startNewSegment(true);
+      }
+    });
   }
 
   function playReminderSound() {
@@ -1178,6 +1211,7 @@ Keep it to 1-2 sentences maximum. Be warm, empowering, and genuine. Do not use q
         showScreen(nav);
         if (nav === 'dashboard') updateDashboard();
         if (nav === 'history') renderHistory();
+        if (nav === 'analytics') updateAnalytics();
       });
     });
 
@@ -1216,6 +1250,8 @@ Keep it to 1-2 sentences maximum. Be warm, empowering, and genuine. Do not use q
     setupFeelings();
     setupSettings();
     setupNavigation();
+    setupImport();
+    setupAnalyticsEvents();
     checkNotificationPermission();
 
     // Swipe for onboarding
@@ -1518,6 +1554,487 @@ Keep it to 1-2 sentences maximum. Be warm, empowering, and genuine. Do not use q
         }
       });
     });
+  }
+
+  // ===== IMPORT DATA =====
+  function setupImport() {
+    const btnImport = document.getElementById('btn-import');
+    const fileInput = document.getElementById('import-file-input');
+    if (!btnImport || !fileInput) return;
+
+    btnImport.addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        try {
+          const data = JSON.parse(evt.target.result);
+          if (!data.segments && !data.allSegments) {
+            alert('Invalid backup file. Missing segment data.');
+            return;
+          }
+          if (confirm('This will merge imported data with your existing data. Existing entries for the same dates will be overwritten. Continue?')) {
+            const imported = data.allSegments || data.segments || {};
+            Object.keys(imported).forEach(dateKey => {
+              if (!state.allSegments[dateKey]) {
+                state.allSegments[dateKey] = [];
+              }
+              const existing = state.allSegments[dateKey].map(s => s.startTime);
+              imported[dateKey].forEach(seg => {
+                if (!existing.includes(seg.startTime)) {
+                  state.allSegments[dateKey].push(seg);
+                }
+              });
+            });
+            state.totalSegments = Object.values(state.allSegments)
+              .reduce((sum, daySegs) => sum + daySegs.length, 0);
+            const todayKey = getTodayKey();
+            state.segments = state.allSegments[todayKey] || [];
+            saveState();
+            updateDashboard();
+            updateStreak();
+            alert('Data imported successfully! (' + Object.keys(imported).length + ' days)');
+          }
+        } catch (err) {
+          alert('Error reading file: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+      fileInput.value = '';
+    });
+  }
+
+  // ===== THEME SYSTEM =====
+  function setupTheme() {
+    const savedTheme = state.settings.theme || 'dark';
+    applyTheme(savedTheme);
+
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const theme = btn.dataset.theme;
+        document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.settings.theme = theme;
+        saveState();
+        applyTheme(theme);
+      });
+    });
+
+    // Listen for system theme changes (for auto mode)
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
+        if (state.settings.theme === 'auto') applyTheme('auto');
+      });
+    }
+  }
+
+  function applyTheme(theme) {
+    let actual = theme;
+    if (theme === 'auto') {
+      actual = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+    document.documentElement.setAttribute('data-theme', actual);
+
+    // Update active button
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === theme);
+    });
+  }
+
+  // ===== BATTERY MONITOR =====
+  function setupBatteryMonitor() {
+    const toggle = document.getElementById('toggle-battery-saver');
+    if (toggle) {
+      toggle.checked = state.settings.batterySaver;
+      toggle.addEventListener('change', () => {
+        state.settings.batterySaver = toggle.checked;
+        saveState();
+      });
+    }
+
+    if ('getBattery' in navigator) {
+      navigator.getBattery().then(battery => {
+        updateBatteryUI(battery);
+        battery.addEventListener('chargingchange', () => updateBatteryUI(battery));
+        battery.addEventListener('levelchange', () => updateBatteryUI(battery));
+      });
+    } else {
+      const statusEl = document.getElementById('battery-status');
+      if (statusEl) {
+        document.getElementById('battery-text').textContent = 'Battery API not available';
+      }
+    }
+  }
+
+  function updateBatteryUI(battery) {
+    const icon = document.getElementById('battery-icon');
+    const text = document.getElementById('battery-text');
+    const statusEl = document.getElementById('battery-status');
+    if (!icon || !text || !statusEl) return;
+
+    const level = Math.round(battery.level * 100);
+    const charging = battery.charging;
+
+    statusEl.classList.remove('low', 'charging');
+    if (charging) {
+      icon.textContent = '⚡';
+      text.textContent = `Battery: ${level}% (charging)`;
+      statusEl.classList.add('charging');
+    } else if (level <= 20) {
+      icon.textContent = '🪫';
+      text.textContent = `Battery: ${level}% — low power mode`;
+      statusEl.classList.add('low');
+
+      // Auto-throttle sensors when battery is low
+      if (state.settings.batterySaver && typeof SmartDetect !== 'undefined') {
+        SmartDetect.setBatterySaving && SmartDetect.setBatterySaving(true);
+      }
+    } else {
+      icon.textContent = '🔋';
+      text.textContent = `Battery: ${level}%`;
+      if (typeof SmartDetect !== 'undefined') {
+        SmartDetect.setBatterySaving && SmartDetect.setBatterySaving(false);
+      }
+    }
+  }
+
+  // ===== ANALYTICS SYSTEM =====
+  let analyticsPeriod = 'week';
+
+  function setupAnalyticsEvents() {
+    document.querySelectorAll('.period-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        analyticsPeriod = btn.dataset.period;
+        updateAnalytics();
+      });
+    });
+  }
+
+  function getFilteredSegments() {
+    const now = new Date();
+    const allDates = Object.keys(state.allSegments).sort();
+    let filtered = {};
+
+    if (analyticsPeriod === 'week') {
+      const weekAgo = new Date(now);
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      allDates.forEach(d => {
+        if (new Date(d) >= weekAgo) filtered[d] = state.allSegments[d];
+      });
+    } else if (analyticsPeriod === 'month') {
+      const monthAgo = new Date(now);
+      monthAgo.setDate(monthAgo.getDate() - 30);
+      allDates.forEach(d => {
+        if (new Date(d) >= monthAgo) filtered[d] = state.allSegments[d];
+      });
+    } else {
+      filtered = { ...state.allSegments };
+    }
+    return filtered;
+  }
+
+  function updateAnalytics() {
+    const data = getFilteredSegments();
+    const allSegs = Object.values(data).flat();
+
+    // Stats
+    const totalSegs = allSegs.length;
+    const daysCount = Object.keys(data).length || 1;
+    const avgDaily = (totalSegs / daysCount).toFixed(1);
+    const bestDay = Math.max(...Object.values(data).map(d => d.length), 0);
+
+    document.getElementById('analytics-total-segments').textContent = totalSegs;
+    document.getElementById('analytics-avg-daily').textContent = avgDaily;
+    document.getElementById('analytics-best-day').textContent = bestDay;
+    document.getElementById('analytics-streak').textContent = state.streak;
+
+    drawMoodChart(data);
+    drawActivityDonut(allSegs);
+    drawSegmentsBarChart(data);
+    renderTopActivities(allSegs);
+  }
+
+  // Chart colors palette
+  const CHART_COLORS = [
+    '#7c5cfc', '#36d1dc', '#f5a623', '#f25c5c', '#36d1a0',
+    '#5b86e5', '#e877c0', '#ffd166', '#06d6a0', '#8b5cf6'
+  ];
+
+  function drawMoodChart(data) {
+    const canvas = document.getElementById('mood-chart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.parentElement.clientWidth;
+    const h = 180;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, w, h);
+
+    const feelingMap = { '😊': 5, '😌': 4, '🤔': 3, '😤': 2, '😰': 1, '😴': 3, '💪': 5, '🙏': 4, '😐': 3 };
+    const dates = Object.keys(data).sort().slice(-14);
+    if (!dates.length) {
+      ctx.fillStyle = 'rgba(240,240,255,0.3)';
+      ctx.font = '13px Inter';
+      ctx.textAlign = 'center';
+      ctx.fillText('No data yet — start logging!', w / 2, h / 2);
+      return;
+    }
+
+    const points = dates.map(d => {
+      const segs = data[d] || [];
+      const feelings = segs.flatMap(s => s.feelings || []);
+      if (!feelings.length) return null;
+      const avg = feelings.reduce((sum, f) => sum + (feelingMap[f] || 3), 0) / feelings.length;
+      return avg;
+    });
+
+    const padding = { top: 20, right: 16, bottom: 30, left: 16 };
+    const chartW = w - padding.left - padding.right;
+    const chartH = h - padding.top - padding.bottom;
+
+    // Draw gridlines
+    ctx.strokeStyle = 'rgba(124, 92, 252, 0.08)';
+    ctx.lineWidth = 1;
+    for (let i = 1; i <= 5; i++) {
+      const y = padding.top + chartH - ((i - 1) / 4) * chartH;
+      ctx.beginPath();
+      ctx.moveTo(padding.left, y);
+      ctx.lineTo(w - padding.right, y);
+      ctx.stroke();
+    }
+
+    // Draw line
+    const validPoints = [];
+    points.forEach((p, i) => {
+      if (p !== null) {
+        const x = padding.left + (i / Math.max(dates.length - 1, 1)) * chartW;
+        const y = padding.top + chartH - ((p - 1) / 4) * chartH;
+        validPoints.push({ x, y });
+      }
+    });
+
+    if (validPoints.length > 1) {
+      // Gradient fill under line
+      const grad = ctx.createLinearGradient(0, padding.top, 0, h - padding.bottom);
+      grad.addColorStop(0, 'rgba(124, 92, 252, 0.25)');
+      grad.addColorStop(1, 'rgba(124, 92, 252, 0)');
+
+      ctx.beginPath();
+      ctx.moveTo(validPoints[0].x, h - padding.bottom);
+      validPoints.forEach(p => ctx.lineTo(p.x, p.y));
+      ctx.lineTo(validPoints[validPoints.length - 1].x, h - padding.bottom);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // Line
+      ctx.beginPath();
+      ctx.moveTo(validPoints[0].x, validPoints[0].y);
+      for (let i = 1; i < validPoints.length; i++) {
+        const xm = (validPoints[i - 1].x + validPoints[i].x) / 2;
+        ctx.bezierCurveTo(xm, validPoints[i - 1].y, xm, validPoints[i].y, validPoints[i].x, validPoints[i].y);
+      }
+      ctx.strokeStyle = '#7c5cfc';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // Dots
+      validPoints.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#7c5cfc';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+      });
+    }
+
+    // Date labels
+    ctx.fillStyle = 'rgba(240,240,255,0.4)';
+    ctx.font = '10px Inter';
+    ctx.textAlign = 'center';
+    const labelStep = Math.max(1, Math.floor(dates.length / 6));
+    dates.forEach((d, i) => {
+      if (i % labelStep === 0 || i === dates.length - 1) {
+        const x = padding.left + (i / Math.max(dates.length - 1, 1)) * chartW;
+        const label = new Date(d).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+        ctx.fillText(label, x, h - 8);
+      }
+    });
+  }
+
+  function drawActivityDonut(segments) {
+    const canvas = document.getElementById('activity-donut');
+    const legend = document.getElementById('activity-legend');
+    if (!canvas || !legend) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const size = 160;
+    canvas.width = size * dpr;
+    canvas.height = size * dpr;
+    canvas.style.width = size + 'px';
+    canvas.style.height = size + 'px';
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, size, size);
+
+    const counts = {};
+    segments.forEach(s => {
+      const act = s.activity || 'Other';
+      counts[act] = (counts[act] || 0) + 1;
+    });
+
+    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 8);
+    const total = sorted.reduce((s, e) => s + e[1], 0);
+
+    if (!total) {
+      ctx.fillStyle = 'rgba(240,240,255,0.3)';
+      ctx.font = '12px Inter';
+      ctx.textAlign = 'center';
+      ctx.fillText('No data', size / 2, size / 2 + 4);
+      legend.innerHTML = '';
+      return;
+    }
+
+    const cx = size / 2, cy = size / 2, r = 62, innerR = 40;
+    let startAngle = -Math.PI / 2;
+
+    sorted.forEach(([act, count], i) => {
+      const sweep = (count / total) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, startAngle, startAngle + sweep);
+      ctx.arc(cx, cy, innerR, startAngle + sweep, startAngle, true);
+      ctx.closePath();
+      ctx.fillStyle = CHART_COLORS[i % CHART_COLORS.length];
+      ctx.fill();
+      startAngle += sweep;
+    });
+
+    // Center text
+    ctx.fillStyle = document.documentElement.getAttribute('data-theme') === 'light' ? '#1a1a2e' : '#f0f0ff';
+    ctx.font = 'bold 20px Outfit';
+    ctx.textAlign = 'center';
+    ctx.fillText(total, cx, cy + 2);
+    ctx.font = '10px Inter';
+    ctx.fillStyle = 'rgba(240,240,255,0.5)';
+    ctx.fillText('segments', cx, cy + 16);
+
+    // Legend
+    legend.innerHTML = sorted.map(([act, count], i) => `
+      <div class="legend-item">
+        <span class="legend-dot" style="background:${CHART_COLORS[i % CHART_COLORS.length]}"></span>
+        <span class="legend-label">${act}</span>
+        <span class="legend-value">${count}</span>
+      </div>
+    `).join('');
+  }
+
+  function drawSegmentsBarChart(data) {
+    const canvas = document.getElementById('segments-bar-chart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.parentElement.clientWidth;
+    const h = 160;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, w, h);
+
+    const dates = Object.keys(data).sort().slice(-14);
+    if (!dates.length) {
+      ctx.fillStyle = 'rgba(240,240,255,0.3)';
+      ctx.font = '13px Inter';
+      ctx.textAlign = 'center';
+      ctx.fillText('No data yet', w / 2, h / 2);
+      return;
+    }
+
+    const values = dates.map(d => (data[d] || []).length);
+    const maxVal = Math.max(...values, 1);
+    const padding = { top: 14, right: 16, bottom: 30, left: 16 };
+    const chartW = w - padding.left - padding.right;
+    const chartH = h - padding.top - padding.bottom;
+    const barW = Math.min(28, (chartW / dates.length) * 0.65);
+    const gap = (chartW - barW * dates.length) / dates.length;
+
+    values.forEach((val, i) => {
+      const barH = (val / maxVal) * chartH;
+      const x = padding.left + i * (barW + gap) + gap / 2;
+      const y = padding.top + chartH - barH;
+
+      // Bar gradient
+      const grad = ctx.createLinearGradient(x, y, x, y + barH);
+      grad.addColorStop(0, '#7c5cfc');
+      grad.addColorStop(1, '#36d1dc');
+      ctx.fillStyle = grad;
+
+      // Rounded top
+      const radius = Math.min(barW / 2, 6);
+      ctx.beginPath();
+      ctx.moveTo(x, y + barH);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.lineTo(x + barW - radius, y);
+      ctx.quadraticCurveTo(x + barW, y, x + barW, y + radius);
+      ctx.lineTo(x + barW, y + barH);
+      ctx.closePath();
+      ctx.fill();
+
+      // Value on top
+      if (val > 0) {
+        ctx.fillStyle = 'rgba(240,240,255,0.6)';
+        ctx.font = '10px Inter';
+        ctx.textAlign = 'center';
+        ctx.fillText(val, x + barW / 2, y - 4);
+      }
+
+      // Date label
+      ctx.fillStyle = 'rgba(240,240,255,0.35)';
+      ctx.font = '9px Inter';
+      ctx.textAlign = 'center';
+      const label = new Date(dates[i]).toLocaleDateString(undefined, { weekday: 'short' });
+      ctx.fillText(label, x + barW / 2, h - 8);
+    });
+  }
+
+  function renderTopActivities(segments) {
+    const container = document.getElementById('top-activities-list');
+    if (!container) return;
+
+    const counts = {};
+    segments.forEach(s => {
+      const act = s.activity || 'Other';
+      counts[act] = (counts[act] || 0) + 1;
+    });
+
+    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+
+    if (!sorted.length) {
+      container.innerHTML = '<p class="analytics-empty">No activities logged yet</p>';
+      return;
+    }
+
+    const medals = ['🥇', '🥈', '🥉', '4', '5'];
+    container.innerHTML = sorted.map(([act, count], i) => `
+      <div class="top-activity-item" style="animation-delay: ${i * 0.08}s">
+        <span class="top-activity-rank">${medals[i]}</span>
+        <span class="top-activity-name">${act}</span>
+        <span class="top-activity-count">${count}×</span>
+      </div>
+    `).join('');
   }
 
   // Service Worker

@@ -98,6 +98,18 @@ const translations = {
         perm_denied: "Notifications blocked",
         perm_default: "Enable Notifications",
 
+        // New Features
+        settings_theme: "Appearance",
+        settings_battery: "Battery Optimization",
+        battery_saver: "Battery Saver",
+        btn_import: "Import Data",
+        theme_light: "Light",
+        theme_dark: "Dark",
+        theme_auto: "Auto",
+        nav_analytics: "Analytics",
+        analytics_title: "Analytics",
+        import_desc: "Import your backup JSON file.",
+
         // Modal
         modal_new_reminder: "New Reminder",
         label_activity: "Activity",
@@ -246,6 +258,18 @@ const translations = {
         sensor_patterns: "Učenie vzorcov",
         sensor_desc_patterns: "Navrhne aktivity, ktoré v tomto čase zvyčajne robíte.",
         live_status: "Stav senzorov",
+
+        // New Features
+        settings_theme: "Vzhľad",
+        settings_battery: "Optimalizácia batérie",
+        battery_saver: "Šetrič batérie",
+        btn_import: "Importovať dáta",
+        theme_light: "Svetlý",
+        theme_dark: "Tmavý",
+        theme_auto: "Automaticky",
+        nav_analytics: "Analytika",
+        analytics_title: "Analytika",
+        import_desc: "Importovať zálohu zo súboru JSON.",
 
         // Saved Places
         saved_places_empty: "Žiadne uložené miesta",
@@ -396,6 +420,18 @@ const translations = {
         settings_desc_ai: "Sugerencias inteligentes para tus intenciones.",
         settings_smart: "Detección Inteligente",
         settings_desc_smart: "La app observa tu entorno para recordarte establecer intenciones.",
+
+        // New Features
+        settings_theme: "Apariencia",
+        settings_battery: "Optimización de batería",
+        battery_saver: "Ahorro de batería",
+        btn_import: "Importar datos",
+        theme_light: "Claro",
+        theme_dark: "Oscuro",
+        theme_auto: "Automático",
+        nav_analytics: "Analítica",
+        analytics_title: "Analítica",
+        import_desc: "Importar copia de seguridad JSON.",
 
         // Sensors
         sensor_location: "Ubicación",
