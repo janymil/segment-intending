@@ -1,0 +1,9 @@
+<resources>
+    <!-- App Theme Colors - Match the PWA theme -->
+    <color name="colorPrimary">#0a0a1a</color>
+    <color name="colorPrimaryDark">#07071a</color>
+    <color name="colorAccent">#7c5cfc</color>
+    <color name="navigationColor">#0a0a1a</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+</resources>
