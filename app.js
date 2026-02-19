@@ -1528,5 +1528,20 @@ Keep it to 1-2 sentences maximum. Be warm, empowering, and genuine. Do not use q
   }
 
   // GO
+  // Language Selector Fix
+  document.addEventListener('DOMContentLoaded', () => {
+    const langSelect = document.getElementById('language-select');
+    if (langSelect) {
+      langSelect.addEventListener('change', (e) => setLanguage(e.target.value));
+      if (typeof currentLang !== 'undefined') langSelect.value = currentLang;
+    }
+  });
+  // Dynamic Re-render on Language Change
+  window.addEventListener('language-changed', () => {
+    renderReminderList();
+    updateDashboard();
+    updateDetectionStatus();
+    updateLog();
+  });
   document.addEventListener('DOMContentLoaded', init);
 })();

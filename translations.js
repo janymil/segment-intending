@@ -506,6 +506,7 @@ function setLanguage(lang) {
         applyTranslations();
         document.documentElement.lang = lang;
         localStorage.setItem('segmentIntendLanguage', lang);
+        window.dispatchEvent(new CustomEvent('language-changed', { detail: lang }));
     }
 }
 
