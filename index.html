@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a1a">
+    <meta name="description"
+        content="Segment Intending — Set your intention before every moment. A mindful utility that helps you pre-pave the outcome of every segment of your day.">
+    <title>Segment Intending</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- ===== SPLASH / ONBOARDING ===== -->
+    <div id="screen-onboarding" class="screen active">
+        <div class="onboarding-container">
+            <div class="onboarding-glow"></div>
+            <div class="onboarding-icon">
+                <svg viewBox="0 0 80 80" fill="none">
+                    <circle cx="40" cy="40" r="36" stroke="url(#grad1)" stroke-width="2.5" stroke-dasharray="6 4" />
+                    <circle cx="40" cy="40" r="20" fill="url(#grad2)" opacity="0.3" />
+                    <circle cx="40" cy="40" r="8" fill="url(#grad2)" />
+                    <defs>
+                        <linearGradient id="grad1" x1="0" y1="0" x2="80" y2="80">
+                            <stop offset="0%" stop-color="#7c5cfc" />
+                            <stop offset="100%" stop-color="#36d1dc" />
+                        </linearGradient>
+                        <linearGradient id="grad2" x1="0" y1="0" x2="80" y2="80">
+                            <stop offset="0%" stop-color="#7c5cfc" />
+                            <stop offset="100%" stop-color="#36d1dc" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <h1 class="onboarding-title">Segment<br>Intending</h1>
+            <p class="onboarding-subtitle">Pre-pave every moment.<br>One intention at a time.</p>
+
+            <div class="onboarding-slides">
+                <div class="slide active" data-slide="0">
+                    <div class="slide-icon">🎯</div>
+                    <h3>What is a Segment?</h3>
+                    <p>Any block of time with a specific purpose — a phone call, a drive, a meeting, cooking dinner.
+                        Your day is made of segments.</p>
+                </div>
+                <div class="slide" data-slide="1">
+                    <div class="slide-icon">⏸️</div>
+                    <h3>The Transition Point</h3>
+                    <p>Before you enter a new segment, <strong>pause</strong>. That moment of stillness is where your
+                        power lives. Close the previous segment. Open the next one with intention.</p>
+                </div>
+                <div class="slide" data-slide="2">
+                    <div class="slide-icon">✨</div>
+                    <h3>Pre-Pave the Outcome</h3>
+                    <p>Define what you want — not just what will happen, but <strong>how you want to feel</strong>. The
+                        emotion is the engine. The intention is the direction.</p>
+                </div>
+                <div class="slide" data-slide="3">
+                    <div class="slide-icon">🔄</div>
+                    <h3>It's a Loop, Not a Lesson</h3>
+                    <p>There's nothing to "learn." There's only the practice. This app is your reminder, your trigger,
+                        your partner. Every day. Every segment.</p>
+                </div>
+            </div>
+
+            <div class="onboarding-dots">
+                <span class="dot active" data-dot="0"></span>
+                <span class="dot" data-dot="1"></span>
+                <span class="dot" data-dot="2"></span>
+                <span class="dot" data-dot="3"></span>
+            </div>
+
+            <button id="btn-onboarding-next" class="btn-primary">Next</button>
+            <button id="btn-onboarding-skip" class="btn-text">Skip intro</button>
+        </div>
+    </div>
+
+    <!-- ===== PAUSE / BREATHING SCREEN ===== -->
+    <div id="screen-pause" class="screen">
+        <div class="pause-container">
+            <div class="pause-bg-orb orb-1"></div>
+            <div class="pause-bg-orb orb-2"></div>
+            <div class="pause-bg-orb orb-3"></div>
+            <div class="breathing-circle">
+                <div class="breathing-ring"></div>
+                <div class="breathing-core"></div>
+            </div>
+            <p class="pause-text">Closing previous segment...</p>
+            <p class="pause-instruction">Take a breath</p>
+            <div class="pause-progress">
+                <div class="pause-progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== NEW SEGMENT FLOW ===== -->
+    <div id="screen-new-segment" class="screen">
+        <div class="segment-container">
+            <button id="btn-back-from-segment" class="btn-back">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+            </button>
+
+            <div class="segment-step step-1 active" id="step-context">
+                <h2 class="segment-question">What are you going to do?</h2>
+                <p class="segment-hint">Choose your next activity</p>
+                <div class="activity-categories" id="activity-categories">
+
+                    <!-- MORNING -->
+                    <div class="activity-category">
+                        <div class="category-header" data-toggle="cat-morning">
+                            <span>🌅 Morning</span>
+                            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </div>
+                        <div class="category-items open" id="cat-morning">
+                            <button class="activity-btn" data-activity="Wake Up"
+                                data-example="I intend to start this day with gratitude, feeling alive and energized.">☀️
+                                Wake Up</button>
+                            <button class="activity-btn" data-activity="Shower"
+                                data-example="I intend to refresh my body and set a positive, clean tone for the day.">🚿
+                                Shower</button>
+                            <button class="activity-btn" data-activity="Breakfast"
+                                data-example="I intend to nourish myself mindfully, savoring this moment of fuel.">🥣
+                                Breakfast</button>
+                            <button class="activity-btn" data-activity="Getting Ready"
+                                data-example="I intend to prepare with calm and purpose, stepping into my best self.">👔
+                                Getting Ready</button>
+                        </div>
+                    </div>
+
+                    <!-- TRAVEL -->
+                    <div class="activity-category">
+                        <div class="category-header" data-toggle="cat-travel">
+                            <span>🚗 Travel</span>
+                            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </div>
+                        <div class="category-items" id="cat-travel">
+                            <button class="activity-btn" data-activity="Driving"
+                                data-example="I intend a safe, smooth drive. I arrive relaxed and on time.">🚘
+                                Driving</button>
+                            <button class="activity-btn" data-activity="Walking"
+                                data-example="I intend to enjoy each step, notice the beauty around me, and feel grounded.">🚶
+                                Walking</button>
+                            <button class="activity-btn" data-activity="Public Transport"
+                                data-example="I intend to use this time peacefully for myself, arriving in a good state.">🚌
+                                Public Transport</button>
+                            <button class="activity-btn" data-activity="Cycling"
+                                data-example="I intend to ride safely, feel alive in my body, and enjoy the movement.">🚴
+                                Cycling</button>
+                        </div>
+                    </div>
+
+                    <!-- WORK -->
+                    <div class="activity-category">
+                        <div class="category-header" data-toggle="cat-work">
+                            <span>💼 Work</span>
+                            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </div>
+                        <div class="category-items" id="cat-work">
+                            <button class="activity-btn" data-activity="Desk Work"
+                                data-example="I intend to be focused, efficient, and calm at my tasks.">🖥️ Desk
+                                Work</button>
+                            <button class="activity-btn" data-activity="Meeting"
+                                data-example="I intend clarity, contribution, and a productive outcome for everyone.">🤝
+                                Meeting</button>
+                            <button class="activity-btn" data-activity="Deep Focus"
+                                data-example="I intend total immersion, creative flow, and distraction-free progress.">🎯
+                                Deep Focus</button>
+                            <button class="activity-btn" data-activity="Emails"
+                                data-example="I intend to handle these efficiently, respond clearly, and move on.">📧
+                                Emails / Admin</button>
+                            <button class="activity-btn" data-activity="Phone Call"
+                                data-example="I intend clear communication, genuine listening, and a positive exchange.">📞
+                                Phone / Video Call</button>
+                        </div>
+                    </div>
+
+                    <!-- BODY & HEALTH -->
+                    <div class="activity-category">
+                        <div class="category-header" data-toggle="cat-body">
+                            <span>🏃 Body & Health</span>
+                            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </div>
+                        <div class="category-items" id="cat-body">
+                            <button class="activity-btn" data-activity="Exercise"
+                                data-example="I intend to push my body with joy, build strength, and feel powerful.">💪
+                                Exercise / Workout</button>
+                            <button class="activity-btn" data-activity="Cooking"
+                                data-example="I intend to prepare this food with love, creativity, and presence.">🍳
+                                Cooking</button>
+                            <button class="activity-btn" data-activity="Eating"
+                                data-example="I intend to eat slowly, gratefully, and savor every bite.">🍽️ Eating a
+                                Meal</button>
+                            <button class="activity-btn" data-activity="Health Visit"
+                                data-example="I intend a positive experience, useful insights, and complete trust in the process.">🏥
+                                Health Appointment</button>
+                        </div>
+                    </div>
+
+                    <!-- PEOPLE -->
+                    <div class="activity-category">
+                        <div class="category-header" data-toggle="cat-people">
+                            <span>👥 People</span>
+                            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </div>
+                        <div class="category-items" id="cat-people">
+                            <button class="activity-btn" data-activity="Conversation"
+                                data-example="I intend to listen deeply, speak honestly, and create mutual understanding.">💬
+                                Important Conversation</button>
+                            <button class="activity-btn" data-activity="Social Event"
+                                data-example="I intend to be present, warm, and genuinely enjoy this gathering.">�
+                                Social Gathering</button>
+                            <button class="activity-btn" data-activity="Family Time"
+                                data-example="I intend to be fully present, loving, and grateful for this time together.">👨‍👩‍👧
+                                Family Time</button>
+                            <button class="activity-btn" data-activity="Date"
+                                data-example="I intend connection, openness, vulnerability, and shared joy.">💕 Date /
+                                Romance</button>
+                        </div>
+                    </div>
+
+                    <!-- WELLBEING -->
+                    <div class="activity-category">
+                        <div class="category-header" data-toggle="cat-wellbeing">
+                            <span>🧘 Wellbeing</span>
+                            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </div>
+                        <div class="category-items" id="cat-wellbeing">
+                            <button class="activity-btn" data-activity="Break"
+                                data-example="I intend to truly pause, breathe deeply, and reset my energy.">☕ Short
+                                Break</button>
+                            <button class="activity-btn" data-activity="Meditation"
+                                data-example="I intend stillness, presence, and a deep connection to inner peace.">🧘
+                                Meditation</button>
+                            <button class="activity-btn" data-activity="Nap"
+                                data-example="I intend a brief, restorative rest that recharges me completely.">😴
+                                Nap</button>
+                            <button class="activity-btn" data-activity="Sleep"
+                                data-example="I intend deep, healing sleep. I release the day and wake refreshed.">🌙
+                                Sleep</button>
+                        </div>
+                    </div>
+
+                    <!-- GROWTH -->
+                    <div class="activity-category">
+                        <div class="category-header" data-toggle="cat-growth">
+                            <span>📚 Growth</span>
+                            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </div>
+                        <div class="category-items" id="cat-growth">
+                            <button class="activity-btn" data-activity="Learning"
+                                data-example="I intend to absorb deeply, understand clearly, and retain what matters.">�
+                                Learning / Study</button>
+                            <button class="activity-btn" data-activity="Creative Work"
+                                data-example="I intend to let inspiration flow freely, without judgment or pressure.">🎨
+                                Creative Work</button>
+                            <button class="activity-btn" data-activity="Reading"
+                                data-example="I intend to be fully absorbed, let the words resonate, and grow from them.">📚
+                                Reading</button>
+                            <button class="activity-btn" data-activity="Hobby"
+                                data-example="I intend pure enjoyment, presence, and playfulness in this activity.">🎮
+                                Hobby</button>
+                        </div>
+                    </div>
+
+                    <!-- HOME -->
+                    <div class="activity-category">
+                        <div class="category-header" data-toggle="cat-home">
+                            <span>� Home</span>
+                            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </div>
+                        <div class="category-items" id="cat-home">
+                            <button class="activity-btn" data-activity="Chores"
+                                data-example="I intend to do this with ease, efficiency, and even find satisfaction in it.">🧹
+                                Household Chores</button>
+                            <button class="activity-btn" data-activity="Shopping"
+                                data-example="I intend smart choices, calm browsing, and a smooth experience.">�
+                                Shopping / Errands</button>
+                            <button class="activity-btn" data-activity="Organizing"
+                                data-example="I intend to create order, clarity, and a peaceful space around me.">📦
+                                Organizing / Cleaning</button>
+                        </div>
+                    </div>
+
+                    <!-- CUSTOM -->
+                    <div class="activity-category">
+                        <div class="category-header category-header-custom" data-toggle="cat-custom">
+                            <span>✏️ Custom Activity</span>
+                            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </div>
+                        <div class="category-items" id="cat-custom">
+                            <div class="custom-activity-wrap">
+                                <input type="text" id="custom-activity-input" class="custom-activity-input"
+                                    placeholder="Describe your activity...">
+                                <button id="btn-voice-activity" class="btn-voice-small" title="Dictate activity">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                                        <line x1="12" y1="19" x2="12" y2="23" />
+                                        <line x1="8" y1="23" x2="16" y2="23" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <button id="btn-custom-go" class="btn-primary btn-small" disabled>Continue with
+                                custom</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="segment-step step-2" id="step-intention">
+                <h2 class="segment-question">What do you intend?</h2>
+                <p class="segment-hint">Describe the outcome you want from this segment</p>
+
+                <!-- Example from selected activity -->
+                <div class="example-intention" id="example-intention">
+                    <div class="example-label">💡 Example for this activity:</div>
+                    <p class="example-text" id="example-text"></p>
+                    <button class="example-use-btn" id="btn-use-example">Use this</button>
+                </div>
+
+                <div class="intention-input-wrapper">
+                    <textarea id="intention-text" class="intention-textarea" placeholder="I intend to..."
+                        rows="3"></textarea>
+                    <button id="btn-voice-input" class="btn-voice" title="Speak your intention">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                            <line x1="12" y1="19" x2="12" y2="23" />
+                            <line x1="8" y1="23" x2="16" y2="23" />
+                        </svg>
+                    </button>
+                </div>
+                <div id="voice-status" class="voice-status hidden">
+                    <div class="voice-wave">
+                        <span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                    <p>Listening...</p>
+                </div>
+
+                <!-- AI Suggestion -->
+                <button id="btn-ai-suggest" class="btn-ai-suggest">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                        <path d="M2 17l10 5 10-5" />
+                        <path d="M2 12l10 5 10-5" />
+                    </svg>
+                    ✨ AI Suggest Intention
+                </button>
+                <div id="ai-loading" class="ai-loading hidden">
+                    <div class="ai-spinner"></div>
+                    <span>Crafting your intention...</span>
+                </div>
+
+                <div class="quick-intentions" id="quick-intentions">
+                    <!-- Populated dynamically based on context -->
+                </div>
+
+                <button id="btn-to-feeling" class="btn-primary" disabled>Continue</button>
+            </div>
+
+            <div class="segment-step step-3" id="step-feeling">
+                <h2 class="segment-question">How do you want to feel?</h2>
+                <p class="segment-hint">The emotion is the engine. Choose the feeling that powers your intention.</p>
+                <div class="feelings-grid" id="feelings-grid">
+                    <button class="feeling-chip" data-feeling="Calm">🧘 Calm</button>
+                    <button class="feeling-chip" data-feeling="Confident">💪 Confident</button>
+                    <button class="feeling-chip" data-feeling="Joyful">😊 Joyful</button>
+                    <button class="feeling-chip" data-feeling="Focused">🎯 Focused</button>
+                    <button class="feeling-chip" data-feeling="Grateful">🙏 Grateful</button>
+                    <button class="feeling-chip" data-feeling="Energized">⚡ Energized</button>
+                    <button class="feeling-chip" data-feeling="Peaceful">☮️ Peaceful</button>
+                    <button class="feeling-chip" data-feeling="Creative">💡 Creative</button>
+                    <button class="feeling-chip" data-feeling="Loving">❤️ Loving</button>
+                    <button class="feeling-chip" data-feeling="Safe">🛡️ Safe</button>
+                    <button class="feeling-chip" data-feeling="Present">🌿 Present</button>
+                    <button class="feeling-chip" data-feeling="Powerful">🔥 Powerful</button>
+                </div>
+                <div class="custom-feeling-wrap">
+                    <input type="text" id="custom-feeling" class="custom-feeling-input"
+                        placeholder="Or type your own feeling...">
+                </div>
+                <button id="btn-set-intention" class="btn-primary" disabled>Set This Intention</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CONFIRMATION / ACTIVE SEGMENT ===== -->
+    <div id="screen-active" class="screen">
+        <div class="active-container">
+            <div class="active-glow"></div>
+            <div class="active-checkmark">
+                <svg viewBox="0 0 80 80" fill="none">
+                    <circle cx="40" cy="40" r="36" stroke="url(#gradCheck)" stroke-width="2.5" />
+                    <path d="M24 40l10 10 22-22" stroke="url(#gradCheck)" stroke-width="3" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <defs>
+                        <linearGradient id="gradCheck" x1="0" y1="0" x2="80" y2="80">
+                            <stop offset="0%" stop-color="#36d1dc" />
+                            <stop offset="100%" stop-color="#5b86e5" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <h2 class="active-title">Intention Set</h2>
+            <div class="active-card">
+                <div class="active-context-badge" id="active-context-badge">Work</div>
+                <p class="active-intention-text" id="active-intention-text"></p>
+                <div class="active-feeling" id="active-feeling-display"></div>
+                <div class="active-timer" id="active-timer">00:00</div>
+            </div>
+            <button id="btn-new-segment" class="btn-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="16" />
+                    <line x1="8" y1="12" x2="16" y2="12" />
+                </svg>
+                New Segment
+            </button>
+            <button id="btn-go-dashboard" class="btn-secondary">View Dashboard</button>
+        </div>
+    </div>
+
+    <!-- ===== DASHBOARD ===== -->
+    <div id="screen-dashboard" class="screen">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h2>Your Day</h2>
+                <span class="dashboard-date" id="dashboard-date"></span>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-segments">0</div>
+                    <div class="stat-label">Segments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-streak">0</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-total">0</div>
+                    <div class="stat-label">All Time</div>
+                </div>
+            </div>
+
+            <div class="feelings-summary" id="feelings-summary">
+                <h3>Today's Feelings</h3>
+                <div class="feelings-bar-chart" id="feelings-chart"></div>
+            </div>
+
+            <div class="segment-log">
+                <h3>Segment Log</h3>
+                <div class="log-list" id="log-list">
+                    <div class="log-empty">
+                        <p>No segments yet today.</p>
+                        <p class="log-empty-hint">Tap "New Segment" to begin your practice.</p>
+                    </div>
+                </div>
+            </div>
+
+            <button id="btn-new-from-dashboard" class="btn-fab">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Bottom Nav -->
+        <nav class="bottom-nav">
+            <button class="nav-item" data-nav="dashboard" id="nav-dashboard">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
+                <span>Dashboard</span>
+            </button>
+            <button class="nav-item" data-nav="history" id="nav-history">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>History</span>
+            </button>
+            <button class="nav-item" data-nav="settings" id="nav-settings">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+                <span>Settings</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- ===== HISTORY SCREEN ===== -->
+    <div id="screen-history" class="screen">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h2>History</h2>
+                <span class="dashboard-date" id="history-range"></span>
+            </div>
+
+            <div class="history-calendar" id="history-calendar"></div>
+
+            <div class="history-day-detail" id="history-day-detail">
+                <p class="history-placeholder">Select a day to see your segments</p>
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <button class="nav-item" data-nav="dashboard">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
+                <span>Dashboard</span>
+            </button>
+            <button class="nav-item active" data-nav="history">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>History</span>
+            </button>
+            <button class="nav-item" data-nav="settings">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+                <span>Settings</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- ===== SETTINGS SCREEN ===== -->
+    <div id="screen-settings" class="screen">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h2>Settings</h2>
+                <span class="dashboard-date">Your AI Partner</span>
+            </div>
+
+            <div class="settings-section">
+                <h3 class="settings-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    Smart Detection
+                </h3>
+                <p class="settings-desc">The app observes your environment and activity to remind you to set intentions.
+                    All processing stays on your device.</p>
+
+                <div class="setting-toggle">
+                    <div class="setting-info">
+                        <span class="setting-emoji">📍</span>
+                        <div>
+                            <span class="setting-name">Location Awareness</span>
+                            <span class="setting-detail">Detect when you arrive/leave saved places (home, work,
+                                gym).</span>
+                        </div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="toggle-location">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <!-- Saved Places (shows when Location is on) -->
+                <div class="saved-places-section hidden" id="saved-places-section">
+                    <div class="saved-places-list" id="saved-places-list">
+                        <p class="saved-places-empty" id="saved-places-empty">No saved places yet</p>
+                    </div>
+                    <div class="saved-places-add">
+                        <button id="btn-save-current-place" class="btn-save-place">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg>
+                            Save current location as...
+                        </button>
+                        <div class="save-place-form hidden" id="save-place-form">
+                            <input type="text" id="place-name" class="modal-input"
+                                placeholder="Name (e.g. Home, Office, Gym)">
+                            <select id="place-activity" class="modal-select" style="margin-top:6px;">
+                                <option value="">Auto-suggest activity (optional)</option>
+                                <option value="Desk Work">💼 Desk Work</option>
+                                <option value="Exercise">💪 Exercise</option>
+                                <option value="Learning">📖 Learning</option>
+                                <option value="Break">☕ Break</option>
+                                <option value="Cooking">🍳 Cooking</option>
+                                <option value="Sleep">🌙 Sleep</option>
+                            </select>
+                            <button id="btn-confirm-save-place" class="btn-primary btn-small"
+                                style="margin-top:8px;">Save Place</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-toggle">
+                    <div class="setting-info">
+                        <span class="setting-emoji">�</span>
+                        <div>
+                            <span class="setting-name">Motion Detection</span>
+                            <span class="setting-detail">Detect still, walking, and active transitions to suggest new
+                                segments.</span>
+                        </div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="toggle-motion">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-toggle">
+                    <div class="setting-info">
+                        <span class="setting-emoji">🎤</span>
+                        <div>
+                            <span class="setting-name">Ambient Noise</span>
+                            <span class="setting-detail">Monitor noise level changes (quiet vs loud). No audio is
+                                recorded.</span>
+                        </div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="toggle-mic">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-toggle">
+                    <div class="setting-info">
+                        <span class="setting-emoji">�</span>
+                        <div>
+                            <span class="setting-name">Screen Return</span>
+                            <span class="setting-detail">When you pick up your phone after 5+ min away, prompt for a new
+                                intention.</span>
+                        </div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="toggle-screen">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-toggle">
+                    <div class="setting-info">
+                        <span class="setting-emoji">⏱️</span>
+                        <div>
+                            <span class="setting-name">Inactivity Nudge</span>
+                            <span class="setting-detail">Gentle nudge if no intention set for 90+ minutes.</span>
+                        </div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="toggle-inactivity" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-toggle">
+                    <div class="setting-info">
+                        <span class="setting-emoji">📊</span>
+                        <div>
+                            <span class="setting-name">Pattern Learning</span>
+                            <span class="setting-detail">Learn your habits and suggest activities you usually do at this
+                                time.</span>
+                        </div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="toggle-patterns" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <!-- Live Status -->
+                <div class="detection-status" id="detection-status">
+                    <h4 class="status-title">Live Status</h4>
+                    <div class="status-grid" id="status-grid">
+                        <div class="status-item"><span class="status-icon">🏃</span><span
+                                class="status-label">Motion</span><span class="status-value"
+                                id="status-motion-val">Off</span></div>
+                        <div class="status-item"><span class="status-icon">📍</span><span
+                                class="status-label">Place</span><span class="status-value"
+                                id="status-location-val">Off</span></div>
+                        <div class="status-item"><span class="status-icon">🎤</span><span
+                                class="status-label">Noise</span><span class="status-value"
+                                id="status-noise-val">Off</span></div>
+                        <div class="status-item"><span class="status-icon">📱</span><span
+                                class="status-label">Screen</span><span class="status-value"
+                                id="status-screen-val">Off</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REMINDERS -->
+            <div class="settings-section">
+                <h3 class="settings-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                    </svg>
+                    Reminders
+                </h3>
+                <p class="settings-desc">Set scheduled reminders to pause and set intentions. The app will alert you
+                    when it's time.</p>
+
+                <!-- Permission status -->
+                <div class="reminder-permission" id="reminder-permission">
+                    <div class="permission-status" id="permission-status">
+                        <span class="permission-dot" id="permission-dot"></span>
+                        <span id="permission-text">Notification permission: checking...</span>
+                    </div>
+                    <button id="btn-enable-notifications" class="btn-permission" style="display:none">Enable
+                        Notifications</button>
+                </div>
+
+                <!-- Reminder list -->
+                <div class="reminder-list" id="reminder-list">
+                    <!-- Populated dynamically -->
+                    <div class="reminder-empty" id="reminder-empty">
+                        <p>No reminders set yet</p>
+                        <p class="reminder-empty-hint">Tap + to create your first reminder</p>
+                    </div>
+                </div>
+
+                <button id="btn-add-reminder" class="btn-add-reminder">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="16" />
+                        <line x1="8" y1="12" x2="16" y2="12" />
+                    </svg>
+                    Add Reminder
+                </button>
+            </div>
+
+            <!-- Reminder Creation Modal (overlay) -->
+            <div class="reminder-modal-overlay hidden" id="reminder-modal">
+                <div class="reminder-modal">
+                    <div class="modal-header">
+                        <h3>New Reminder</h3>
+                        <button class="modal-close" id="btn-close-reminder-modal">&times;</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <!-- Activity -->
+                        <label class="modal-label">Activity</label>
+                        <select id="reminder-activity" class="modal-select">
+                            <option value="">— Select activity —</option>
+                            <optgroup label="🌅 Morning">
+                                <option value="Wake Up">☀️ Wake Up</option>
+                                <option value="Shower">🚿 Shower</option>
+                                <option value="Breakfast">🥣 Breakfast</option>
+                                <option value="Getting Ready">👔 Getting Ready</option>
+                            </optgroup>
+                            <optgroup label="🚗 Travel">
+                                <option value="Driving">🚘 Driving</option>
+                                <option value="Walking">🚶 Walking</option>
+                                <option value="Public Transport">🚌 Public Transport</option>
+                                <option value="Cycling">🚴 Cycling</option>
+                            </optgroup>
+                            <optgroup label="💼 Work">
+                                <option value="Desk Work">🖥️ Desk Work</option>
+                                <option value="Meeting">🤝 Meeting</option>
+                                <option value="Deep Focus">🎯 Deep Focus</option>
+                                <option value="Emails">📧 Emails / Admin</option>
+                                <option value="Phone Call">📞 Phone / Video Call</option>
+                            </optgroup>
+                            <optgroup label="🏃 Body & Health">
+                                <option value="Exercise">� Exercise</option>
+                                <option value="Cooking">🍳 Cooking</option>
+                                <option value="Eating">🍽️ Eating</option>
+                                <option value="Health Visit">🏥 Health Visit</option>
+                            </optgroup>
+                            <optgroup label="👥 People">
+                                <option value="Conversation">💬 Conversation</option>
+                                <option value="Social Event">🎉 Social Event</option>
+                                <option value="Family Time">👨‍👩‍👧 Family Time</option>
+                                <option value="Date">💕 Date</option>
+                            </optgroup>
+                            <optgroup label="🧘 Wellbeing">
+                                <option value="Break">☕ Break</option>
+                                <option value="Meditation">🧘 Meditation</option>
+                                <option value="Nap">😴 Nap</option>
+                                <option value="Sleep">🌙 Sleep</option>
+                            </optgroup>
+                            <optgroup label="📚 Growth">
+                                <option value="Learning">📖 Learning</option>
+                                <option value="Creative Work">🎨 Creative Work</option>
+                                <option value="Reading">📚 Reading</option>
+                                <option value="Hobby">🎮 Hobby</option>
+                            </optgroup>
+                            <optgroup label="🏠 Home">
+                                <option value="Chores">🧹 Chores</option>
+                                <option value="Shopping">🛒 Shopping</option>
+                                <option value="Organizing">📦 Organizing</option>
+                            </optgroup>
+                        </select>
+                        <div class="modal-custom-activity" id="modal-custom-activity" style="display:none;">
+                            <input type="text" id="reminder-custom-activity" class="modal-input"
+                                placeholder="Your custom activity...">
+                        </div>
+                        <label class="modal-checkbox-row" style="margin-top:6px;">
+                            <input type="checkbox" id="reminder-custom-check">
+                            <span>Use custom activity instead</span>
+                        </label>
+
+                        <!-- Time -->
+                        <label class="modal-label" style="margin-top:18px;">Time</label>
+                        <input type="time" id="reminder-time" class="modal-input modal-time-input" value="09:00">
+
+                        <!-- Repeat -->
+                        <label class="modal-label" style="margin-top:18px;">Repeat</label>
+                        <div class="repeat-options">
+                            <button class="repeat-btn active" data-repeat="daily">Every day</button>
+                            <button class="repeat-btn" data-repeat="weekdays">Weekdays</button>
+                            <button class="repeat-btn" data-repeat="weekends">Weekends</button>
+                            <button class="repeat-btn" data-repeat="once">Once</button>
+                        </div>
+
+                        <!-- Alert type -->
+                        <label class="modal-label" style="margin-top:18px;">How to remind you</label>
+                        <div class="alert-type-options">
+                            <label class="alert-type-check">
+                                <input type="checkbox" id="alert-notification" checked>
+                                <span>🔔 Notification</span>
+                            </label>
+                            <label class="alert-type-check">
+                                <input type="checkbox" id="alert-sound" checked>
+                                <span>🔊 Sound</span>
+                            </label>
+                            <label class="alert-type-check">
+                                <input type="checkbox" id="alert-vibration">
+                                <span>📳 Vibration</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button id="btn-save-reminder" class="btn-primary btn-small">Save Reminder</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3 class="settings-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                    Pause Duration
+                </h3>
+                <p class="settings-desc">How long the breathing pause lasts between segments</p>
+                <div class="pause-duration-selector">
+                    <button class="duration-btn" data-duration="3">3s</button>
+                    <button class="duration-btn active" data-duration="5">5s</button>
+                    <button class="duration-btn" data-duration="8">8s</button>
+                    <button class="duration-btn" data-duration="10">10s</button>
+                </div>
+            </div>
+
+            <!-- AI ASSISTANT -->
+            <div class="settings-section">
+                <h3 class="settings-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                        <path d="M2 17l10 5 10-5" />
+                        <path d="M2 12l10 5 10-5" />
+                    </svg>
+                    AI Assistant
+                </h3>
+                <p class="settings-desc">Connect an AI to craft personalized intentions based on your activity, time of
+                    day, and history. Your API key stays on your device only.</p>
+
+                <div class="setting-toggle">
+                    <div class="setting-info">
+                        <span class="setting-emoji">🤖</span>
+                        <div>
+                            <span class="setting-name">AI Provider</span>
+                            <span class="setting-detail">Choose your AI engine</span>
+                        </div>
+                    </div>
+                    <select id="ai-provider" class="ai-select">
+                        <option value="gemini">Gemini</option>
+                        <option value="openai">OpenAI</option>
+                    </select>
+                </div>
+
+                <div class="ai-key-wrap">
+                    <label class="ai-key-label">API Key</label>
+                    <div class="ai-key-input-wrap">
+                        <input type="password" id="ai-api-key" class="ai-key-input"
+                            placeholder="Paste your API key here...">
+                        <button id="btn-toggle-key" class="btn-toggle-key" title="Show/Hide key">👁️</button>
+                    </div>
+                    <p class="ai-key-hint">Get a free Gemini key at <a href="https://aistudio.google.com/apikey"
+                            target="_blank" style="color: var(--accent-2)">aistudio.google.com</a></p>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3 class="settings-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Data
+                </h3>
+                <button class="btn-settings-action" id="btn-export">Export My Data</button>
+                <button class="btn-settings-action btn-danger" id="btn-clear-data">Clear All Data</button>
+            </div>
+
+            <div class="app-version">
+                <p>Segment Intending v1.0</p>
+                <p class="version-tagline">Pre-pave every moment ✨</p>
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <button class="nav-item" data-nav="dashboard">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
+                <span>Dashboard</span>
+            </button>
+            <button class="nav-item" data-nav="history">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>History</span>
+            </button>
+            <button class="nav-item active" data-nav="settings">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+                <span>Settings</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Smart Detection Banner (floating) -->
+    <div class="smart-banner hidden" id="smart-banner">
+        <div class="smart-banner-content">
+            <div class="smart-banner-icon" id="smart-banner-icon">🔔</div>
+            <div class="smart-banner-text">
+                <div class="smart-banner-title" id="smart-banner-title">Activity detected</div>
+                <div class="smart-banner-msg" id="smart-banner-msg">You seem to have changed what you're doing.</div>
+            </div>
+            <button class="smart-banner-close" id="smart-banner-close">&times;</button>
+        </div>
+        <div class="smart-banner-actions">
+            <button class="smart-banner-btn" id="smart-banner-set">Set Intention</button>
+            <button class="smart-banner-btn secondary" id="smart-banner-dismiss">Not now</button>
+        </div>
+    </div>
+
+    <script src="smart-detect.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
