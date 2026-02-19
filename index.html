@@ -112,8 +112,8 @@
             </button>
 
             <div class="segment-step step-1 active" id="step-context">
-                <h2 class="segment-question">What are you going to do?</h2>
-                <p class="segment-hint">Choose your next activity</p>
+                <h2 class="segment-question" data-i18n="question_context">What are you going to do?</h2>
+                <p class="segment-hint" data-i18n="question_context_hint">Choose your next activity</p>
                 <div class="activity-categories" id="activity-categories">
 
                     <!-- MORNING -->
@@ -583,8 +583,29 @@
     <div id="screen-settings" class="screen">
         <div class="dashboard-container">
             <div class="dashboard-header">
-                <h2>Settings</h2>
-                <span class="dashboard-date">Your AI Partner</span>
+                <h2 data-i18n="settings_title">Settings</h2>
+                <span class="dashboard-date" data-i18n="settings_desc_ai">Your AI Partner</span>
+            </div>
+
+            <!-- Language Selector -->
+            <div class="settings-section">
+                <h3 class="settings-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path
+                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                        </path>
+                    </svg>
+                    <span data-i18n="settings_language">Language</span>
+                </h3>
+                <div class="language-selector" style="margin-top: 10px;">
+                    <select id="language-select" class="modal-select">
+                        <option value="en">English</option>
+                        <option value="sk">Slovenčina</option>
+                        <option value="es">Español</option>
+                    </select>
+                </div>
             </div>
 
             <div class="settings-section">
@@ -593,17 +614,19 @@
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                         <circle cx="12" cy="12" r="3" />
                     </svg>
-                    Smart Detection
+                    <span data-i18n="settings_smart">Smart Detection</span>
                 </h3>
-                <p class="settings-desc">The app observes your environment and activity to remind you to set intentions.
+                <p class="settings-desc" data-i18n="settings_desc_smart">The app observes your environment and activity
+                    to remind you to set intentions.
                     All processing stays on your device.</p>
 
                 <div class="setting-toggle">
                     <div class="setting-info">
                         <span class="setting-emoji">📍</span>
                         <div>
-                            <span class="setting-name">Location Awareness</span>
-                            <span class="setting-detail">Detect when you arrive/leave saved places (home, work,
+                            <span class="setting-name" data-i18n="sensor_location">Location Awareness</span>
+                            <span class="setting-detail" data-i18n="sensor_desc_location">Detect when you arrive/leave
+                                saved places (home, work,
                                 gym).</span>
                         </div>
                     </div>
@@ -616,7 +639,8 @@
                 <!-- Saved Places (shows when Location is on) -->
                 <div class="saved-places-section hidden" id="saved-places-section">
                     <div class="saved-places-list" id="saved-places-list">
-                        <p class="saved-places-empty" id="saved-places-empty">No saved places yet</p>
+                        <p class="saved-places-empty" id="saved-places-empty" data-i18n="saved_places_empty">No saved
+                            places yet</p>
                     </div>
                     <div class="saved-places-add">
                         <button id="btn-save-current-place" class="btn-save-place">
@@ -625,13 +649,15 @@
                                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                                 <circle cx="12" cy="10" r="3" />
                             </svg>
-                            Save current location as...
+                            <span data-i18n="btn_save_place">Save current location as...</span>
                         </button>
                         <div class="save-place-form hidden" id="save-place-form">
                             <input type="text" id="place-name" class="modal-input"
-                                placeholder="Name (e.g. Home, Office, Gym)">
+                                placeholder="Name (e.g. Home, Office, Gym)"
+                                data-i18n-placeholder="placeholder_place_name">
                             <select id="place-activity" class="modal-select" style="margin-top:6px;">
-                                <option value="">Auto-suggest activity (optional)</option>
+                                <option value="" data-i18n="option_auto_suggest">Auto-suggest activity (optional)
+                                </option>
                                 <option value="Desk Work">💼 Desk Work</option>
                                 <option value="Exercise">💪 Exercise</option>
                                 <option value="Learning">📖 Learning</option>
@@ -639,19 +665,19 @@
                                 <option value="Cooking">🍳 Cooking</option>
                                 <option value="Sleep">🌙 Sleep</option>
                             </select>
-                            <button id="btn-confirm-save-place" class="btn-primary btn-small"
-                                style="margin-top:8px;">Save Place</button>
+                            <button id="btn-confirm-save-place" class="btn-primary btn-small" style="margin-top:8px;"
+                                data-i18n="btn_confirm_save_place">Save Place</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="setting-toggle">
                     <div class="setting-info">
-                        <span class="setting-emoji">�</span>
+                        <span class="setting-emoji">🏃</span>
                         <div>
-                            <span class="setting-name">Motion Detection</span>
-                            <span class="setting-detail">Detect still, walking, and active transitions to suggest new
-                                segments.</span>
+                            <span class="setting-name" data-i18n="sensor_motion">Motion Detection</span>
+                            <span class="setting-detail" data-i18n="sensor_desc_motion">Detect still, walking, and
+                                active transitions.</span>
                         </div>
                     </div>
                     <label class="toggle">
@@ -664,9 +690,9 @@
                     <div class="setting-info">
                         <span class="setting-emoji">🎤</span>
                         <div>
-                            <span class="setting-name">Ambient Noise</span>
-                            <span class="setting-detail">Monitor noise level changes (quiet vs loud). No audio is
-                                recorded.</span>
+                            <span class="setting-name" data-i18n="sensor_noise">Ambient Noise</span>
+                            <span class="setting-detail" data-i18n="sensor_desc_noise">Monitor noise level changes
+                                (quiet vs loud).</span>
                         </div>
                     </div>
                     <label class="toggle">
@@ -677,10 +703,11 @@
 
                 <div class="setting-toggle">
                     <div class="setting-info">
-                        <span class="setting-emoji">�</span>
+                        <span class="setting-emoji">📱</span>
                         <div>
-                            <span class="setting-name">Screen Return</span>
-                            <span class="setting-detail">When you pick up your phone after 5+ min away, prompt for a new
+                            <span class="setting-name" data-i18n="sensor_screen">Screen Return</span>
+                            <span class="setting-detail" data-i18n="sensor_desc_screen">When you pick up your phone
+                                after 5+ min away, prompt for a new
                                 intention.</span>
                         </div>
                     </div>
@@ -694,8 +721,9 @@
                     <div class="setting-info">
                         <span class="setting-emoji">⏱️</span>
                         <div>
-                            <span class="setting-name">Inactivity Nudge</span>
-                            <span class="setting-detail">Gentle nudge if no intention set for 90+ minutes.</span>
+                            <span class="setting-name" data-i18n="sensor_inactivity">Inactivity Nudge</span>
+                            <span class="setting-detail" data-i18n="sensor_desc_inactivity">Gentle nudge if no intention
+                                set for 90+ minutes.</span>
                         </div>
                     </div>
                     <label class="toggle">
@@ -708,8 +736,9 @@
                     <div class="setting-info">
                         <span class="setting-emoji">📊</span>
                         <div>
-                            <span class="setting-name">Pattern Learning</span>
-                            <span class="setting-detail">Learn your habits and suggest activities you usually do at this
+                            <span class="setting-name" data-i18n="sensor_patterns">Pattern Learning</span>
+                            <span class="setting-detail" data-i18n="sensor_desc_patterns">Learn your habits and suggest
+                                activities you usually do at this
                                 time.</span>
                         </div>
                     </div>
@@ -721,7 +750,7 @@
 
                 <!-- Live Status -->
                 <div class="detection-status" id="detection-status">
-                    <h4 class="status-title">Live Status</h4>
+                    <h4 class="status-title" data-i18n="live_status">Live Status</h4>
                     <div class="status-grid" id="status-grid">
                         <div class="status-item"><span class="status-icon">🏃</span><span
                                 class="status-label">Motion</span><span class="status-value"
@@ -852,38 +881,41 @@
                         </label>
 
                         <!-- Time -->
-                        <label class="modal-label" style="margin-top:18px;">Time</label>
+                        <label class="modal-label" style="margin-top:18px;" data-i18n="label_time">Time</label>
                         <input type="time" id="reminder-time" class="modal-input modal-time-input" value="09:00">
 
                         <!-- Repeat -->
-                        <label class="modal-label" style="margin-top:18px;">Repeat</label>
+                        <label class="modal-label" style="margin-top:18px;" data-i18n="label_repeat">Repeat</label>
                         <div class="repeat-options">
-                            <button class="repeat-btn active" data-repeat="daily">Every day</button>
-                            <button class="repeat-btn" data-repeat="weekdays">Weekdays</button>
-                            <button class="repeat-btn" data-repeat="weekends">Weekends</button>
-                            <button class="repeat-btn" data-repeat="once">Once</button>
+                            <button class="repeat-btn active" data-repeat="daily" data-i18n="rep_every_day">Every
+                                day</button>
+                            <button class="repeat-btn" data-repeat="weekdays" data-i18n="rep_weekdays">Weekdays</button>
+                            <button class="repeat-btn" data-repeat="weekends" data-i18n="rep_weekends">Weekends</button>
+                            <button class="repeat-btn" data-repeat="once" data-i18n="rep_once">Once</button>
                         </div>
 
                         <!-- Alert type -->
-                        <label class="modal-label" style="margin-top:18px;">How to remind you</label>
+                        <label class="modal-label" style="margin-top:18px;" data-i18n="label_alerts">How to remind
+                            you</label>
                         <div class="alert-type-options">
                             <label class="alert-type-check">
                                 <input type="checkbox" id="alert-notification" checked>
-                                <span>🔔 Notification</span>
+                                <span data-i18n="alert_notif">🔔 Notification</span>
                             </label>
                             <label class="alert-type-check">
                                 <input type="checkbox" id="alert-sound" checked>
-                                <span>🔊 Sound</span>
+                                <span data-i18n="alert_sound">🔊 Sound</span>
                             </label>
                             <label class="alert-type-check">
                                 <input type="checkbox" id="alert-vibration">
-                                <span>📳 Vibration</span>
+                                <span data-i18n="alert_vib">📳 Vibration</span>
                             </label>
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button id="btn-save-reminder" class="btn-primary btn-small">Save Reminder</button>
+                        <button id="btn-save-reminder" class="btn-primary btn-small" data-i18n="modal_save">Save
+                            Reminder</button>
                     </div>
                 </div>
             </div>
@@ -977,7 +1009,7 @@
                     <circle cx="12" cy="12" r="10" />
                     <polyline points="12 6 12 12 16 14" />
                 </svg>
-                <span>History</span>
+                <span data-i18n="history_title">History</span>
             </button>
             <button class="nav-item active" data-nav="settings">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -985,7 +1017,7 @@
                     <path
                         d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
                 </svg>
-                <span>Settings</span>
+                <span data-i18n="settings_title">Settings</span>
             </button>
         </nav>
     </div>
@@ -995,18 +1027,20 @@
         <div class="smart-banner-content">
             <div class="smart-banner-icon" id="smart-banner-icon">🔔</div>
             <div class="smart-banner-text">
-                <div class="smart-banner-title" id="smart-banner-title">Activity detected</div>
+                <div class="smart-banner-title" id="smart-banner-title" data-i18n="smart_banner_title">Activity detected
+                </div>
                 <div class="smart-banner-msg" id="smart-banner-msg">You seem to have changed what you're doing.</div>
             </div>
             <button class="smart-banner-close" id="smart-banner-close">&times;</button>
         </div>
         <div class="smart-banner-actions">
-            <button class="smart-banner-btn" id="smart-banner-set">Set Intention</button>
-            <button class="smart-banner-btn secondary" id="smart-banner-dismiss">Not now</button>
+            <button class="smart-banner-btn" id="smart-banner-set" data-i18n="btn_start_segment">Set Intention</button>
+            <button class="smart-banner-btn secondary" id="smart-banner-dismiss" data-i18n="sk_not_now">Not now</button>
         </div>
     </div>
 
     <script src="smart-detect.js"></script>
+    <script src="translations.js"></script>
     <script src="app.js"></script>
 </body>
 

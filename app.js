@@ -145,7 +145,7 @@
   }
 
   function formatDate(date) {
-    return new Date(date).toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' });
+    return new Date(date).toLocaleDateString(currentLang, { weekday: 'long', month: 'short', day: 'numeric' });
   }
 
   // ===== SCREEN NAVIGATION =====
@@ -664,8 +664,8 @@ Keep it to 1-2 sentences maximum. Be warm, empowering, and genuine. Do not use q
     if (state.segments.length === 0) {
       logList.innerHTML = `
         <div class="log-empty">
-          <p>No segments yet today.</p>
-          <p class="log-empty-hint">Tap the + button to begin your practice.</p>
+          <p>${t('history_empty')}</p>
+          <p class="log-empty-hint">${t('question_context_hint')}</p>
         </div>`;
       return;
     }
@@ -673,9 +673,9 @@ Keep it to 1-2 sentences maximum. Be warm, empowering, and genuine. Do not use q
       <div class="log-item">
         <div class="log-time">${formatTime(seg.timestamp)}</div>
         <div class="log-content">
-          <div class="log-context">${seg.context}</div>
+          <div class="log-context">${t(seg.context)}</div>
           <div class="log-intention">${seg.intention}</div>
-          <div class="log-feeling">${(seg.feelings || []).join(' • ')}</div>
+          <div class="log-feeling">${(seg.feelings || []).map(f => t(f)).join(' • ')}</div>
         </div>
       </div>
     `).join('');
@@ -1029,11 +1029,11 @@ Keep it to 1-2 sentences maximum. Be warm, empowering, and genuine. Do not use q
       if (r.alerts.sound) alertIcons.push('🔊');
       if (r.alerts.vibration) alertIcons.push('📳');
 
-      const repeatLabel = { daily: 'Daily', weekdays: 'Mon-Fri', weekends: 'Sat-Sun', once: 'Once' };
+      const repeatLabel = { daily: t('rep_every_day'), weekdays: t('rep_weekdays'), weekends: t('rep_weekends'), once: t('rep_once') };
 
       div.innerHTML = `
         <div class="reminder-info">
-          <div class="reminder-activity-name">${r.activity}</div>
+          <div class="reminder-activity-name">${t(r.activity)}</div>
           <div class="reminder-meta">
             <span class="reminder-time-badge">⏰ ${formatReminderTime(r.time)}</span>
             <span class="reminder-repeat-badge">${repeatLabel[r.repeat] || r.repeat}</span>
@@ -1299,29 +1299,34 @@ Keep it to 1-2 sentences maximum. Be warm, empowering, and genuine. Do not use q
       pattern_match: '📊'
     };
 
-    const titles = {
-      motion_change: 'Activity Change Detected',
-      location_arrived: 'You\'ve Arrived!',
-      location_left: 'On the Move',
-      location_moved: 'Significant Movement',
-      screen_return: 'Welcome Back!',
-      inactivity: 'Time for an Intention',
-      noise_change: 'Environment Changed',
-      pattern_match: 'Activity Suggestion'
-    };
+    let msgKey = 'smart_banner_title';
+    switch (type) {
+      case 'motion_change': msgKey = 'smart_msg_motion'; break;
+      case 'location_arrived': msgKey = 'smart_msg_location'; break;
+      case 'location_left': msgKey = 'smart_msg_motion'; break;
+      case 'location_moved': msgKey = 'smart_msg_motion'; break;
+      case 'screen_return': msgKey = 'smart_msg_screen'; break;
+      case 'inactivity': msgKey = 'smart_msg_inactivity'; break;
+      case 'noise_change': msgKey = 'smart_msg_noise'; break;
+      case 'pattern_match': msgKey = 'smart_msg_pattern'; break;
+      default: msgKey = 'smart_banner_title';
+    }
+
+    const displayTitle = t('smart_banner_title');
+    const displayMsg = t(msgKey);
 
     showSmartBanner(
       icons[type] || '🔔',
-      titles[type] || 'Detection',
-      data.message || 'Something changed.',
+      displayTitle,
+      displayMsg,
       data.suggestedActivity || null
     );
 
     // Also fire a lightweight notification if enabled
     if ('Notification' in window && Notification.permission === 'granted') {
       try {
-        const n = new Notification(titles[type] || 'Segment Intending', {
-          body: data.message,
+        const n = new Notification(displayTitle, {
+          body: displayMsg,
           icon: 'icons/icon-192.png',
           tag: 'smart-detect-' + type,
           requireInteraction: false
@@ -1408,32 +1413,32 @@ Keep it to 1-2 sentences maximum. Be warm, empowering, and genuine. Do not use q
 
     // Motion
     if (status.motion.enabled) {
-      const labels = { unknown: 'Scanning...', still: 'Still', walking: 'Walking', active: 'Active' };
-      update('status-motion-val', labels[status.motion.state] || 'On', true);
+      const labels = { unknown: t('Scanning...'), still: t('Still'), walking: t('Walking'), active: t('Active') };
+      update('status-motion-val', labels[status.motion.state] || t('On'), true);
     } else {
-      update('status-motion-val', 'Off', false);
+      update('status-motion-val', t('Off'), false);
     }
 
     // Location
     if (status.location.enabled) {
-      update('status-location-val', status.location.currentPlace || 'Tracking', true);
+      update('status-location-val', status.location.currentPlace || t('Tracking'), true);
     } else {
-      update('status-location-val', 'Off', false);
+      update('status-location-val', t('Off'), false);
     }
 
     // Noise
     if (status.noise.enabled) {
-      const labels = { unknown: 'Listening...', quiet: 'Quiet', moderate: 'Medium', loud: 'Loud' };
-      update('status-noise-val', labels[status.noise.state] || 'On', true);
+      const labels = { unknown: t('Listening...'), quiet: t('Quiet'), moderate: t('Medium'), loud: t('Loud') };
+      update('status-noise-val', labels[status.noise.state] || t('On'), true);
     } else {
-      update('status-noise-val', 'Off', false);
+      update('status-noise-val', t('Off'), false);
     }
 
     // Screen
     if (status.screen.enabled) {
-      update('status-screen-val', 'Active', true);
+      update('status-screen-val', t('Active'), true);
     } else {
-      update('status-screen-val', 'Off', false);
+      update('status-screen-val', t('Off'), false);
     }
   }
 
